@@ -43,6 +43,7 @@ public class PersonService {
             case "PERSON_CREATED": //TODO- person should be null here and all other cases should be not null add check.
                 ObjectMapper mapper = new ObjectMapper();
                 Person newPerson = parsePerson(event.getValue());
+                newPerson.setSocSecNum(event.getSocSecNum());
                 personDAO.save(newPerson);
                 break;
             case "SOCSECNUM_CHANGE":
@@ -72,9 +73,12 @@ public class PersonService {
                 person.setEmail(event.getValue().asText());
                 personDAO.save(person);
                 break;
-            // Handle other event types
+            case "PHONE_CHANGE":
+                person.setPhone(event.getValue().asText());
+                personDAO.save(person);
+                break;
+
         }
-//        personDAO.save(person);
     }
 
     public Person findPersonBySocSecNum(String socSecNum) {
