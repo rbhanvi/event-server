@@ -33,29 +33,11 @@ public class EventService {
         eventDAO.save(event);
     }
 
-
-    public List<Event> getEventsFromSequence(Long startSequenceNumber) {
-        // Implement logic to fetch events from startSequenceNumber
-        return eventDAO.findBySequenceNumberGreaterThanEqual(startSequenceNumber);
-    }
-
-    public Event getEventBySequence(Long sequenceNumber) {
-        // Implement logic to fetch event by sequenceNumber
-        return eventDAO.findBySequenceNumber(sequenceNumber);
-    }
-
-    public List<Event> getAllEvents() {
-        return eventDAO.findAll();
-    }
-
-
     public PersonEventsDTO getPersonWithEvents(String socSecNum) {
         PersonEventsDTO personEventsDTO = new PersonEventsDTO();
-        // Fetch person by socSecNum excluding logically deleted records
         Person person = personDAO.findBySocSecNumAndDeletedFalse(socSecNum).orElse(null);
 
         if (person != null) {
-            // Fetch events associated with the person
             List<Event> events = eventDAO.findBySocSecNum(socSecNum);
             personEventsDTO.setEvents(events);
             personEventsDTO.setAddress(person.getAddress());

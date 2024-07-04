@@ -36,30 +36,25 @@ public class PersonService {
         Optional<Person> personOptional = personDAO.findById(event.getSocSecNum());
         Person person = personOptional.orElseGet(() -> new Person());
 
-        if(null != person){
-            log.info("Person details - {}, Person name - {}", person.getSocSecNum(), person.getName());
-        }
+        log.info("Person details - {}, Person name - {}", person.getSocSecNum(), person.getName());
+
         switch (event.getEventType()) {
-            case "PERSON_CREATED": //TODO- person should be null here and all other cases should be not null add check.
-                ObjectMapper mapper = new ObjectMapper();
+            case "PERSON_CREATED":
                 Person newPerson = parsePerson(event.getValue());
                 newPerson.setSocSecNum(event.getSocSecNum());
                 personDAO.save(newPerson);
                 break;
             case "SOCSECNUM_CHANGE":
-                person.setDeleted(true); // Assuming you have a 'deleted' flag
+                person.setDeleted(true);
 
-                // Create a new Person entity with updated socSecNum
                 Person updatePerson = new Person();
-                updatePerson.setName(person.getName()); // Copy other attributes as needed
+                updatePerson.setName(person.getName());
                 updatePerson.setAddress(person.getAddress());
                 updatePerson.setEmail(person.getEmail());
                 updatePerson.setPhone(person.getPhone());
 
-                // Save the new person
                 updatePerson.setSocSecNum(event.getValue().asText());
                 personDAO.save(updatePerson);
-//                personDAO.save(person);
                 break;
             case "ADDRESS_CHANGE":
                 person.setAddress(event.getValue().asText());
@@ -79,20 +74,6 @@ public class PersonService {
                 break;
 
         }
-    }
-
-    public Person findPersonBySocSecNum(String socSecNum) {
-        return personDAO.findById(socSecNum).orElse(null);
-    }
-
-    public Person getPersonBySocSecNum(String socSecNum) {
-        Optional<Person> personOptional = personDAO.findBySocSecNumAndDeletedFalse(socSecNum);
-        Person person = new Person();
-        if (personOptional.isPresent()) {
-            person = personOptional.get();
-        }
-
-        return person;
     }
 }
 
