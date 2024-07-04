@@ -65,15 +65,7 @@ public class EventClient {
             }
 
             try {
-                eventService.saveEvent(
-
-
-
-
-
-
-
-                        event);
+                eventService.saveEvent(event);
             } catch (Exception e) {
                 log.info("Some error occurred while updating event data in DB - {}", e);
                 throw new RuntimeException(e);
