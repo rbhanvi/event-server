@@ -72,7 +72,6 @@ public class PersonService {
                 person.setPhone(event.getValue().asText());
                 personDAO.save(person);
                 break;
-
         }
     }
 }
